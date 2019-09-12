@@ -1,12 +1,15 @@
-﻿Loop
+﻿step := 0
+SetCapsLockState, on
+Loop
 {
-	Input, SingleKey, L1 V
-	if GetKeyState("CapsLock", "T") = 1
- 	{
-		SetCapsLockState, off
- 	}
-	else if GetKeyState("CapsLock", "F") = 0
- 	{
-   		SetCapsLockState, on
+	try	
+	{
+		Input, SingleKey, L1 V
+		if (%SingleKey% in "a")
+			if step = 0
+				SetCapsLockState, on
+			else
+				SetCapsLockState, off
+			step := Mod(step + 1, 2)
 	}
 }
