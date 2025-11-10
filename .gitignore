@@ -1,2 +1,6 @@
-*/.env
+node_modules
+.output
+dist
+.wxt
 .env
+.DS_Store
