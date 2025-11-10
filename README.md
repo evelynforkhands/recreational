@@ -1,0 +1,1 @@
+Here I store personal automation / fun without purpose / imperfect code. For now it will be AutoHotkey relics from my windows past, and a few very specific browser extensions.
