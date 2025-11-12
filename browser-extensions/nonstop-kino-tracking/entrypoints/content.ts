@@ -10,7 +10,7 @@ type MovieStats = {
 };
 
 export default defineContentScript({
-    matches: ["*://nonstopkino.at/*/*"],
+    matches: ["*://nonstopkino.at/*"],
 
 
 
