@@ -34,33 +34,30 @@ export default defineContentScript({
 });
 
 function extractMovieStatsFromDom(): MovieStats {
-    const getText = (selector: string, fallback: string) =>
-        document.querySelector<HTMLElement>(selector)?.textContent ??
-        fallback;
+    const findVisibleText = (selector: string, fallback: string) => {
+        const elems = Array.from(document.querySelectorAll<HTMLElement>(selector));
+        for (const el of elems) {
+            if (el.getAttribute("aria-hidden") === "true") continue;
+            if (el.closest('[aria-hidden="true"]')) continue;
+            const txt = el.textContent?.trim();
+            if (txt) return txt;
+        }
+        return fallback;
+    };
 
     return {
-        title: getText(".content h1", "No title found"),
-        location: getText(
-            ".content div.meta div.location",
-            "No location found",
-        ),
+        title: findVisibleText(".content h1", "No title found"),
+        location: findVisibleText(".content div.meta div.location", "No location found"),
         cost: "10",
-        date: getText(
-            ".content div.meta div.date div.normal",
-            "No date found",
-        ),
+        date: findVisibleText(".content div.meta div.date div.normal", "No date found"),
         time: "",
-        duration: getText(
-            ".content p.duration span.value",
-            "No duration found",
-        ),
+        duration: findVisibleText(".content p.duration span.value", "No duration found"),
     };
 }
 
 function transformMovieStats(stats: MovieStats) {
     const bundeslaenderRegex =
         /\s*,?\s*(Wien|Burgenland|Nieder(?:ö|oe)sterreich|Ober(?:ö|oe)sterreich|Steiermark|K(?:ä|ae)rnten|Salzburg|Tirol|Vorarlberg)\s*$/i;
-
     const year = new Date().getFullYear();
     const datePattern = /(\d{1,2}\.\d{1,2})(?!\.\d{2,4})/;
     const timePattern = /(\d{1,2}:\d{2})/;
